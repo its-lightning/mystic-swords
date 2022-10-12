@@ -1,9 +1,7 @@
-from pickle import FALSE
 from re import L
 from symbol import single_input
 import cv2
 import pygame
-import time
 
 
 screen = pygame.display.set_mode((1920,1080),pygame.RESIZABLE)

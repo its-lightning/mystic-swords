@@ -3,6 +3,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import cgi
 import pickle
 
+playerlist=[]
 
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -13,15 +14,15 @@ class handler(BaseHTTPRequestHandler):
         serverfile=open("serverfile.dat","rb")
         listdata = pickle.load(serverfile)
         output = ""
+        
         for i in listdata:
-            try:
-                output+=i[0]
-            except:
-                output=""
+            for j in  i:
+                output += j
 
         self.wfile.write(output.encode())
         
     def do_POST(self):
+        global playerlist
         form = cgi.FieldStorage(
             fp=self.rfile, 
             headers=self.headers,
@@ -32,18 +33,36 @@ class handler(BaseHTTPRequestHandler):
         data=form["keys"].value
 
         serverfile=open("serverfile.dat","wb")
-        if data[0:1]=="1":
+        
+
+        if data[0:1] not in playerlist and len(playerlist) <= 4:
+            playerlist.append(data[0:1])
+        
+        if len(playerlist) == 1 and data[0:1] == playerlist[0]:
             player1list=[data]
         else:
             player1list=[]
 
-        if data[0:1]=="2":
+        if len(playerlist) == 2 and data == playerlist[1]:
             player2list=[data]
         else:
             player2list=[]
         
-        datalist=[player1list,player2list]
+        if len(playerlist) == 3 and data[0:1] == playerlist[2]:
+            player3list=[data]
+        else:
+            player3list=[]
+        
+        if len(playerlist) == 4 and data[0:1] == playerlist[3]:
+            player4list=[data]
+        else:
+            player4list=[]
+        
+        
+        
+        datalist=[player1list,player2list,player3list,player4list]
         print(datalist)
+        
         pickle.dump(datalist,serverfile)
         serverfile.flush()
         
