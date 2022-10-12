@@ -1,10 +1,9 @@
+from http import server
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import cgi
+import pickle
 
-apple=["left","power1"]
-
-def getport(x):
-    return x
+serverfile=open("serverfile.dat","wb")
 
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -12,7 +11,7 @@ class handler(BaseHTTPRequestHandler):
         self.send_header('Content-type','text/html')
         self.end_headers()
 
-        output = apple[1]
+        output = "1"
         self.wfile.write(output.encode())
         
     def do_POST(self):
@@ -23,13 +22,29 @@ class handler(BaseHTTPRequestHandler):
                      'CONTENT_TYPE':self.headers['Content-Type'],
                      })
 
-        print(form["keys"].value)
+        data=form["keys"].value
+
+        if data[0:1]=="1":
+            player1list=[data]
+        else:
+            player1list=[]
+
+        if data[0:1]=="2":
+            player2list=[data]
+        else:
+            player2list=[]
         
+        datalist=[player1list,player2list]
+        print(datalist)
+        pickle.dump(datalist,serverfile)
+        serverfile.flush()
         
         self.send_response(200)
         self.send_header('Content-type','text/html')
         self.end_headers()
 
 def start():
-    with HTTPServer(('', 6666), handler) as server:
+    with HTTPServer(('192.168.1.6', 6665), handler) as server:
         server.serve_forever()
+
+start()

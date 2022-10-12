@@ -130,7 +130,7 @@ def menu():
             screen.blit(sword_right,(screen_x/2+315,screen_y/2-142))
             pygame.display.update()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                return ["create",7777]
+                return ["create"]
             
         if menu_dict["join"]==True:
             screen.blit(join_game,(screen_x/2-232,screen_y/2+49))
@@ -140,7 +140,7 @@ def menu():
             screen.blit(sword_right,(screen_x/2+232,screen_y/2+52))
             pygame.display.update()
             if event !=None and event.type == pygame.MOUSEBUTTONDOWN:
-                return ["join",12,7777]
+                return ["join"]
         
 
 

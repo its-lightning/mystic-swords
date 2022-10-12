@@ -19,7 +19,7 @@ menu_info=menu.menu()
 pygame.display.update()
 
 def servermain():
-    import servermain
+    os.startfile("servermain.py")
 
 if menu_info[0] == "create":
     thread1=threading.Thread(target=servermain)
@@ -32,5 +32,6 @@ def client():
             movelist=keys.movement(keylist,event)
             player.move(movelist,p2)
         
+client()
+        
             
-
