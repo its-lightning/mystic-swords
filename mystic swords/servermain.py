@@ -3,7 +3,6 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import cgi
 import pickle
 
-serverfile=open("serverfile.dat","wb")
 
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -11,7 +10,15 @@ class handler(BaseHTTPRequestHandler):
         self.send_header('Content-type','text/html')
         self.end_headers()
 
-        output = "1"
+        serverfile=open("serverfile.dat","rb")
+        listdata = pickle.load(serverfile)
+        output = ""
+        for i in listdata:
+            try:
+                output+=i[0]
+            except:
+                output=""
+
         self.wfile.write(output.encode())
         
     def do_POST(self):
@@ -24,6 +31,7 @@ class handler(BaseHTTPRequestHandler):
 
         data=form["keys"].value
 
+        serverfile=open("serverfile.dat","wb")
         if data[0:1]=="1":
             player1list=[data]
         else:

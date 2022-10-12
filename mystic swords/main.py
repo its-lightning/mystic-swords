@@ -4,6 +4,7 @@ import keys
 import player
 import os
 import threading
+import client
 
 pygame.display.set_caption("Mystic Sword")
 
@@ -26,12 +27,13 @@ if menu_info[0] == "create":
     thread1.start()
 
 print("a")
-def client():
+def main():
     while True:
         for event in pygame.event.get():
             movelist=keys.movement(keylist,event)
             player.move(movelist,p2)
+            client.get()
         
-client()
+main()
         
             
