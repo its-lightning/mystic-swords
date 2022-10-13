@@ -7,6 +7,7 @@ def ip(ip):
     ipcode = ip
 
 def move(movelist,p2):
+    print(movelist)
     if movelist!=[]:
             if movelist[-1]==p2[0]:
                 client.post(ipcode+".right")

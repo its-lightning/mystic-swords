@@ -1,7 +1,6 @@
 import pygame
 import menu
 import keys
-import player
 import os
 import threading
 import client
@@ -25,12 +24,11 @@ pygame.init()
 
 def clientfun(hostip,ip):
     client.ip(hostip)
-    player.ip(ip)
+    keys.ip(ip)
     while True:
         for event in pygame.event.get():
             client.get()
             movelist=keys.movement(keylist,event)
-            player.move(movelist,p2)
         
 def servermain():
     os.startfile("servermain.py")

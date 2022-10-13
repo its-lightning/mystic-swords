@@ -1,9 +1,10 @@
 from http import server
 from http.server import BaseHTTPRequestHandler, HTTPServer
+import servercomputation
 import cgi
 import pickle
 
-playerlist=[]
+playerlist=["-1","-1","-1","-1"]
 
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -12,12 +13,14 @@ class handler(BaseHTTPRequestHandler):
         self.end_headers()
 
         serverfile=open("serverfile.dat","rb")
-        listdata = pickle.load(serverfile)
-        output = ""
-        
-        for i in listdata:
-            for j in  i:
-                output += j
+        loaddata = pickle.load(serverfile)
+        output=""
+        loopno=0
+        for i in loaddata:
+            output += playerlist[loopno]+"."
+            for j in i:
+                output += str(j)+"."
+            loopno += 1
 
         self.wfile.write(output.encode())
         
@@ -34,38 +37,15 @@ class handler(BaseHTTPRequestHandler):
 
         serverfile=open("serverfile.dat","wb")
 
-        data=data.split(".")
-
         if data[0:1] not in playerlist and len(playerlist) <= 4:
-            playerlist.append(data[0:1])
-        
+            emptyslot=playerlist.index("-1")
+            playerlist[emptyslot]=data[0:1]
+            print(playerlist)
+            servercomputation.getplayerlist(playerlist)
 
-        if len(playerlist) >= 1 and data[0] in playerlist[0]:
-            player1list=[data[0]+data[1]]
-        else:
-            player1list=[]
+        dumpdata = servercomputation.computedata(data)
 
-        if len(playerlist) >= 2 and data[0] in playerlist[1]:
-            player2list=[data[0]+data[1]]
-        else:
-            player2list=[]
-        
-        if len(playerlist) >= 3 and data[0] in playerlist[2]:
-            player3list=[data[0]+data[1]]
-        else:
-            player3list=[]
-        
-        if len(playerlist) >= 4 and data[0] in playerlist[3]:
-            player4list=[data[0]+data[1]]
-        else:
-            player4list=[]
-        
-        
-        print(data[0],playerlist[0])
-        datalist=[player1list,player2list,player3list,player4list]
-        print(datalist)
-
-        pickle.dump(datalist,serverfile)
+        pickle.dump(dumpdata,serverfile)
         serverfile.flush()
         
         self.send_response(200)
