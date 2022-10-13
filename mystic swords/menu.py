@@ -1,6 +1,6 @@
 from re import L
 from symbol import single_input
-import cv2
+#import cv2
 import pygame
 
 

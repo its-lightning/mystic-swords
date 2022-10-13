@@ -33,36 +33,38 @@ class handler(BaseHTTPRequestHandler):
         data=form["keys"].value
 
         serverfile=open("serverfile.dat","wb")
-        
+
+        data=data.split(".")
 
         if data[0:1] not in playerlist and len(playerlist) <= 4:
             playerlist.append(data[0:1])
         
-        if len(playerlist) == 1 and data[0:1] == playerlist[0]:
-            player1list=[data]
+
+        if len(playerlist) >= 1 and data[0] in playerlist[0]:
+            player1list=[data[0]+data[1]]
         else:
             player1list=[]
 
-        if len(playerlist) == 2 and data == playerlist[1]:
-            player2list=[data]
+        if len(playerlist) >= 2 and data[0] in playerlist[1]:
+            player2list=[data[0]+data[1]]
         else:
             player2list=[]
         
-        if len(playerlist) == 3 and data[0:1] == playerlist[2]:
-            player3list=[data]
+        if len(playerlist) >= 3 and data[0] in playerlist[2]:
+            player3list=[data[0]+data[1]]
         else:
             player3list=[]
         
-        if len(playerlist) == 4 and data[0:1] == playerlist[3]:
-            player4list=[data]
+        if len(playerlist) >= 4 and data[0] in playerlist[3]:
+            player4list=[data[0]+data[1]]
         else:
             player4list=[]
         
         
-        
+        print(data[0],playerlist[0])
         datalist=[player1list,player2list,player3list,player4list]
         print(datalist)
-        
+
         pickle.dump(datalist,serverfile)
         serverfile.flush()
         
@@ -71,7 +73,7 @@ class handler(BaseHTTPRequestHandler):
         self.end_headers()
 
 def start():
-    with HTTPServer(('192.168.1.6', 6665), handler) as server:
+    with HTTPServer(('', 6665), handler) as server:
         server.serve_forever()
 
 start()

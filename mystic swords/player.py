@@ -5,17 +5,16 @@ ipcode = ""
 def ip(ip):
     global ipcode
     ipcode = ip
-    print("")
 
 def move(movelist,p2):
     if movelist!=[]:
             if movelist[-1]==p2[0]:
-                client.post(ipcode+"right")
+                client.post(ipcode+".right")
             if movelist[-1]==p2[1]:
-                client.post(ipcode+"left")
+                client.post(ipcode+".left")
             if movelist[-1]==p2[2]:
-                client.post(ipcode+"down")
+                client.post(ipcode+".down")
             if movelist[-1]==p2[3]:
-                client.post(ipcode+"up")
+                client.post(ipcode+".up")
     else:
-        client.post(ipcode+"steady")
+        client.post(ipcode+".steady")

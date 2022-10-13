@@ -23,8 +23,8 @@ pygame.display.update()
 
 pygame.init()
 
-def clientfun(ip):
-    client.ip(ip)
+def clientfun(hostip,ip):
+    client.ip(hostip)
     player.ip(ip)
     while True:
         for event in pygame.event.get():
@@ -41,19 +41,26 @@ if menu_info[0] == "create":
     import socket
 
     name = socket.gethostname()
-    ip = socket.gethostbyname(name)
+    hostip = socket.gethostbyname(name)
 
     del socket
 
-    ip=ip.split(".")
-    ip=ip[-1]
+    hostip=hostip.split(".")
+    hostip=hostip[-1]
 
     font = pygame.font.SysFont(None, 24)
-    ipcode=font.render(str(ip),True,(0,0,0))
+    ipcode=font.render(str(hostip),True,(0,0,0))
     screen.blit(ipcode,(22,0))
     
-    clientfun(ip)
+    clientfun(hostip,hostip)
 
 elif menu_info[0] == "join":  
-    ip = input("enter ip ") 
-    clientfun(ip)            
+    hostip = input("enter host ip ") 
+    import socket
+
+    name = socket.gethostname()
+    ip = socket.gethostbyname(name)
+    ip=ip.split(".")
+    ip=ip[-1]
+    del socket
+    clientfun(hostip,ip)            
