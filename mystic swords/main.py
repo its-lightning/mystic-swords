@@ -45,14 +45,14 @@ if menu_info[0] == "create":
 
     del socket
 
-    hostip=hostip.split(".")
-    hostip=hostip[-1]
+    ip=hostip.split(".")
+    ip=ip[-1]
 
     font = pygame.font.SysFont(None, 24)
     ipcode=font.render(str(hostip),True,(0,0,0))
     screen.blit(ipcode,(22,0))
     
-    clientfun(hostip,hostip)
+    clientfun(hostip,ip)
 
 elif menu_info[0] == "join":  
     hostip = input("enter host ip ") 
