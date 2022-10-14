@@ -22,8 +22,10 @@ def movemntreturn(direction,xylist):
 def computedata(data):
     playernoofdata = data.split(".")[0]
     datalist = data.split(".")
+
     print(data)
     for i in range(0,4):
+        print(playerlist[i],playernoofdata)
         if p[i] != datalist[0] and playerlist[i] == playernoofdata:
             p[i] = data
             

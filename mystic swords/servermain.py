@@ -35,11 +35,13 @@ class handler(BaseHTTPRequestHandler):
 
         data=form["keys"].value
 
+        datalist=data.split(".")
+
         serverfile=open("serverfile.dat","wb")
 
-        if data[0:1] not in playerlist and len(playerlist) <= 4:
+        if datalist[0] not in playerlist and len(playerlist) <= 4:
             emptyslot=playerlist.index("-1")
-            playerlist[emptyslot]=data[0:1]
+            playerlist[emptyslot]=datalist[0]
             print(playerlist)
             servercomputation.getplayerlist(playerlist)
 

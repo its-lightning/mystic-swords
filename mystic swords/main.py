@@ -29,8 +29,6 @@ def clientfun(hostip,ip):
         for event in pygame.event.get():
             client.get()
             movelist=keys.movement(keylist,event)
-        else :
-            client.get()
             
 def servermain():
     os.startfile("servermain.py")
