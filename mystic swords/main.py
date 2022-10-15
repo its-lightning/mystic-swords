@@ -55,6 +55,7 @@ if menu_info[0] == "create":
 
 elif menu_info[0] == "join":  
     hostip = input("enter host ip ") 
+    hostip = "192.168."+hostip
     import socket
 
     name = socket.gethostname()
