@@ -1,5 +1,4 @@
 import pygame
-import keyboard
 import client
 
 ipcode = ""
@@ -15,7 +14,6 @@ def movement(l,event):
         l.append(str(event.key))   
     if event.type == pygame.KEYUP:
         l.remove(str(event.key))
-    print(l)
     retur = ipcode
     if l == []:
         retur += ".steady"
@@ -25,14 +23,10 @@ def movement(l,event):
                 retur += ".right"
             elif i == '97':
                 retur += ".left"
-            elif i == '115':
-                retur += ".up"
             elif i == '119':
+                retur += ".up"
+            elif i == '115':
                 retur += ".down"
-        
-        
-
-
 
     client.post(retur)
 

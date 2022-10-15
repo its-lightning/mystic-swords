@@ -22,13 +22,9 @@ def movemntreturn(direction,xylist):
 def computedata(data):
     playernoofdata = data.split(".")[0]
     datalist = data.split(".")
-
-    print(data)
     for i in range(0,4):
-        print(playerlist[i],playernoofdata)
         if p[i] != datalist[0] and playerlist[i] == playernoofdata:
             p[i] = data
-            
             if datalist[1] in "rightleftdownup":
                 px,py = movemntreturn(datalist[1],playerxy[i])
                 playerxy[i][0],playerxy[i][1] = px,py

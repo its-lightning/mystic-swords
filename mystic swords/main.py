@@ -4,7 +4,6 @@ import keys
 import os
 import threading
 import client
-import player
 
 
 pygame.display.set_caption("Mystic Sword")
@@ -22,13 +21,15 @@ pygame.display.update()
 
 pygame.init()
 
-def clientfun(hostip,ip):
+def clientfun(hostip,ip,screen):
     client.ip(hostip)
     keys.ip(ip)
     while True:
         for event in pygame.event.get():
-            client.get()
+            client.get(screen)
             movelist=keys.movement(keylist,event)
+        else:
+            client.get(screen)
             
 def servermain():
     os.startfile("servermain.py")
@@ -50,7 +51,7 @@ if menu_info[0] == "create":
     ipcode=font.render(str(hostip),True,(0,0,0))
     screen.blit(ipcode,(22,0))
     
-    clientfun(hostip,ip)
+    clientfun(hostip,ip,screen)
 
 elif menu_info[0] == "join":  
     hostip = input("enter host ip ") 
@@ -61,4 +62,4 @@ elif menu_info[0] == "join":
     ip=ip.split(".")
     ip=ip[-1]
     del socket
-    clientfun(hostip,ip)            
+    clientfun(hostip,ip,screen)            

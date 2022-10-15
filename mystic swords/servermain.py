@@ -20,6 +20,7 @@ class handler(BaseHTTPRequestHandler):
             output += playerlist[loopno]+"."
             for j in i:
                 output += str(j)+"."
+            output += "+"
             loopno += 1
 
         self.wfile.write(output.encode())
@@ -42,7 +43,6 @@ class handler(BaseHTTPRequestHandler):
         if datalist[0] not in playerlist and len(playerlist) <= 4:
             emptyslot=playerlist.index("-1")
             playerlist[emptyslot]=datalist[0]
-            print(playerlist)
             servercomputation.getplayerlist(playerlist)
 
         dumpdata = servercomputation.computedata(data)
