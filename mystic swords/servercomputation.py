@@ -69,7 +69,7 @@ def computedata(data):
         if p[i] != datalist[0] and playerlist[i] == playernoofdata:
             p[i] = data
             if datalist[1] in "rightleftdownup":
-                print(datalist)
+                print(data)
                 if len(datalist) == 2:
                     px,py,rightbool = movemntreturn(datalist[1],playerdata[i],rightbool)
                 else:

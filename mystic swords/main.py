@@ -1,9 +1,10 @@
 import pygame
 import menu
-import keys
+import multiplayerkeys
 import os
 import threading
 import client
+import singleplayergame
 
 
 pygame.display.set_caption("Mystic Sword")
@@ -23,18 +24,22 @@ pygame.init()
 
 def clientfun(hostip,ip,screen):
     client.ip(hostip)
-    keys.ip(ip)
+    multiplayerkeys.ip(ip)
     while True:
         for event in pygame.event.get():
             client.get(screen)
-            movelist=keys.movement(keylist,event)
+            movelist=multiplayerkeys.movement(keylist,event)
         else:
             client.get(screen)
             
 def servermain():
     os.startfile("servermain.py")
 
-if menu_info[0] == "create":
+if menu_info[0] == "singleplayer":
+    singleplayergame.keys(["100","97","119","115"])
+    singleplayergame.main(screen)
+
+elif menu_info[0] == "create":
     thread1=threading.Thread(target=servermain)
     thread1.start()
     import socket

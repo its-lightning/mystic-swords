@@ -1,5 +1,5 @@
 import requests
-import display
+import multiplayerdisplay
 
 ipcode = ""
 
@@ -9,7 +9,7 @@ def ip(ip):
 
 def get(screen):
     response = requests.get('http://'+ipcode+':6665')
-    display.display(response.text,screen)
+    multiplayerdisplay.display(response.text,screen)
 
 def post(data):
     url = "http://"+ipcode+":6665"
