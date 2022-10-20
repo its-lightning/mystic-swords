@@ -9,7 +9,8 @@ import singleplayergame
 
 pygame.display.set_caption("Mystic Sword")
 
-screen = pygame.display.set_mode((1920,1080),pygame.RESIZABLE)
+
+screen = pygame.display.set_mode((1280,720),pygame.RESIZABLE)
 
 stable = pygame.image.load('player\stable 1.png')
 

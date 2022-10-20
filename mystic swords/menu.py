@@ -2,7 +2,7 @@
 import pygame
 
 
-screen = pygame.display.set_mode((1920,1080),pygame.RESIZABLE)
+screen = pygame.display.set_mode((1280,720),pygame.RESIZABLE)
 
 def menu_music():
     pygame.mixer.init()
