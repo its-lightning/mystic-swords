@@ -10,13 +10,13 @@ import singleplayergame
 pygame.display.set_caption("Mystic Sword")
 
 
-screen = pygame.display.set_mode((1280,720),pygame.RESIZABLE)
+screen = pygame.display.set_mode((1366,768),pygame.RESIZABLE)
 
 stable = pygame.image.load('player\stable 1.png')
 
 keylist=[]
 
-p2=["100","97","115","119"]
+p2=["100","97","119","115"]
 
 menu_info=menu.menu()
 pygame.display.update()
@@ -37,7 +37,7 @@ def servermain():
     os.startfile("servermain.py")
 
 if menu_info[0] == "singleplayer":
-    singleplayergame.keys(["100","97","119","115"])
+    singleplayergame.keys(p2)
     singleplayergame.main(screen)
 
 elif menu_info[0] == "create":

@@ -3,32 +3,47 @@ import pygame
 import time
 
 keylist=[]
-playerdata=[100,100,"down",1]
+playerdata=[100,100,"down",2]
 
 map = pygame.image.load('map/map.png')
 
 
-up1 = pygame.image.load('player/up 1.jpg')
-up2 = pygame.image.load('player/up 2.jpg')
-up3 = pygame.image.load('player/up 3.jpg')
+up1 = pygame.image.load('player/up 1.png')
+up2 = pygame.image.load('player/up 2.png')
+up3 = pygame.image.load('player/up 3.png')
 
-down1 = pygame.image.load('player/down 1.jpg')
-down2 = pygame.image.load('player/down 2.jpg')
-down3 = pygame.image.load('player/down 3.jpg')
+down1 = pygame.image.load('player/down 1.png')
+down2 = pygame.image.load('player/down 2.png')
+down3 = pygame.image.load('player/down 3.png')
 
-right1 = pygame.image.load('player/right 1.jpg')
-right2 = pygame.image.load('player/right 2.jpg')
-right3 = pygame.image.load('player/right 3.jpg')
+right1 = pygame.image.load('player/right 1.png')
+right2 = pygame.image.load('player/right 2.png')
+right3 = pygame.image.load('player/right 3.png')
 
-left1 = pygame.image.load('player/left 1.jpg')
-left2 = pygame.image.load('player/left 2.jpg')
-left3 = pygame.image.load('player/left 3.jpg')
+left1 = pygame.image.load('player/left 1.png')
+left2 = pygame.image.load('player/left 2.png')
+left3 = pygame.image.load('player/left 3.png')
 
 rightlist = [right1,right2,right3]
 leftlist = [left1,left2,left3]
 uplist = [up1,up2,up3]
 downlist = [down1,down2,down3]
 
+increase = 50
+
+
+
+for i in range(0,3):
+    
+    rightlist[i] = pygame.transform.scale(rightlist[i], (increase,increase))
+    rightlist[i].set_colorkey((255,255,255))
+    uplist[i] = pygame.transform.scale(uplist[i], (increase,increase))
+    uplist[i].set_colorkey((255,255,255))
+    downlist[i] = pygame.transform.scale(downlist[i], (increase,increase))
+    downlist[i].set_colorkey((255,255,255))
+    leftlist[i] = pygame.transform.scale(leftlist[i], (increase,increase))
+    leftlist[i].set_colorkey((255,255,255))
+    
 moveno = [0,0,0,0]
 
 pygame.init()
@@ -157,13 +172,13 @@ def movement(pressedlist):
 
     
     if xyposreturn[0] > 1275 and xyposreturn[1] > 715:
-        emptret()
+        return emptret()
     elif xyposreturn[0] < 10 and xyposreturn[1] < 30:
-        emptret()
+        return emptret()
     elif xyposreturn[0] > 1275 and xyposreturn[1] < 30:
-        emptret()
+        return emptret()
     elif xyposreturn[0] < 10 and xyposreturn[1] > 715:
-        emptret()
+        return emptret()
     elif xyposreturn[0] > 1275:
         return playerdata[0],xyposreturn[1]
     elif xyposreturn[0] < 10:
@@ -179,13 +194,14 @@ def movement(pressedlist):
         return xyposreturn
 
 def main(screen):
-    pressedlist=[]
+    pressedlist = []
     while True:
         for event in pygame.event.get():
             pressedlist = keysheld(pressedlist,event)
         print(playerdata)
         playerdata[0],playerdata[1] = movement(pressedlist)
         screen.blit(map,(0,0))
+        print(downlist)
         if playerdata[2] == "right":
             screen.blit(rightlist[moveno[0]],(playerdata[0],playerdata[1]))
         if playerdata[2] == "left":
@@ -194,6 +210,6 @@ def main(screen):
             screen.blit(uplist[moveno[2]],(playerdata[0],playerdata[1]))
         if playerdata[2] == "down":
             screen.blit(downlist[moveno[3]],(playerdata[0],playerdata[1]))
-        time.sleep(0.02)
+        time.sleep(0.04)
 
         pygame.display.update()

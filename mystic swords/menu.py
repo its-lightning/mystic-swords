@@ -1,8 +1,8 @@
-#import cv2
+import cv2
 import pygame
 
 
-screen = pygame.display.set_mode((1280,720),pygame.RESIZABLE)
+screen = pygame.display.set_mode((1366,768),pygame.RESIZABLE)
 
 def menu_music():
     pygame.mixer.init()
@@ -53,6 +53,12 @@ def menu():
 
     play = pygame.image.load('menu\play.png')
 
+    how_to_play = pygame.image.load('menu\how to play.png')
+
+    settings = pygame.image.load('menu\settings.png')
+    
+    highscore = pygame.image.load('menu\highscore.png')
+    
     singleplayer = pygame.image.load('menu\singleplayer.png')
 
     multiplayer = pygame.image.load('menu\multiplayer.png')
@@ -63,7 +69,8 @@ def menu():
 
     sword_left = pygame.image.load('menu\sword left.png')
     sword_right = pygame.image.load('menu\sword right.png')
-    menu_dict={"play":True,"singleplayer":False,"multiplayer":False,"create":False,"join":False,"settings":False}
+    menu_dict={"play":True,"settings":True,"how to play":True,"highscore":True,"singleplayer":False,"multiplayer":False,"create":False,"join":False}
+
     
     while True:
         for event in pygame.event.get():
@@ -74,7 +81,10 @@ def menu():
         menu_bg(mouse_x,mouse_y)
         screen_x,screen_y=screen.get_size()
         
-        play_rect = pygame.Rect(screen_x/2-115,screen_y/2-49,230,98)
+        play_rect = pygame.Rect(screen_x/2-115,screen_y/2-49-270,230,98)
+        how_to_play_rect = pygame.Rect(screen_x/2-115,screen_y/2-49-85,230,98)
+        settings_rect = pygame.Rect(screen_x/2-115,screen_y/2-49+85,230,98)
+        highscore_rect = pygame.Rect(screen_x/2-115,screen_y/2-49+270,230,98)
 
         singleplayer_rect = pygame.Rect(screen_x/2-337,screen_y/2-149,674,98)
         multiplayer_rect = pygame.Rect(screen_x/2-325,screen_y/2+49,650,98)
@@ -83,18 +93,59 @@ def menu():
         join_rect = pygame.Rect(screen_x/2-232,screen_y/2+49,464,98)
         
         if menu_dict["play"]==True:
-            screen.blit(play,(screen_x/2-115,screen_y/2-49))
+            screen.blit(play,(screen_x/2-115,screen_y/2-49-270))
 
         if play_rect.collidepoint(mouse_x,mouse_y) and menu_dict["play"] == True:
-            screen.blit(sword_left,(screen_x/2-115-169,screen_y/2-42))
-            screen.blit(sword_right,(screen_x/2+115,screen_y/2-42))
+            screen.blit(sword_left,(screen_x/2-115-169,screen_y/2-42-270))
+            screen.blit(sword_right,(screen_x/2+115,screen_y/2-42-270))
             pygame.display.update()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                menu_dict["play"]=False
+                return ["singleplayer"]
+                '''menu_dict["play"]=False
                 menu_dict["singleplayer"]=True
-                menu_dict["multiplayer"]=True
+                menu_dict["multiplayer"]=True'''
+        if menu_dict["settings"]==True:
+            screen.blit(settings,(screen_x/2-231,screen_y/2-49+85))
 
-        if menu_dict["singleplayer"]==True:
+        if settings_rect.collidepoint(mouse_x,mouse_y) and menu_dict["settings"] == True:
+            screen.blit(sword_left,(screen_x/2-231-169,screen_y/2-42+85))
+            screen.blit(sword_right,(screen_x/2+231,screen_y/2-42+85))
+            pygame.display.update()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                menu_dict["play"] = False
+                menu_dict["settings"] = False
+                menu_dict["highscore"] = False
+                menu_dict["how to play"] = False
+        
+        if menu_dict["how to play"]==True:
+            screen.blit(how_to_play,(screen_x/2-287,screen_y/2-49-85))
+
+        if how_to_play_rect.collidepoint(mouse_x,mouse_y) and menu_dict["how to play"] == True:
+            screen.blit(sword_left,(screen_x/2-287-169,screen_y/2-42-85))
+            screen.blit(sword_right,(screen_x/2+287,screen_y/2-42-85))
+            pygame.display.update()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                menu_dict["play"] = False
+                menu_dict["settings"] = False
+                menu_dict["highscore"] = False
+                menu_dict["how to play"] = False
+        
+        if menu_dict["highscore"]==True:
+            screen.blit(highscore,(screen_x/2-252,screen_y/2-49+270))
+
+        if highscore_rect.collidepoint(mouse_x,mouse_y) and menu_dict["highscore"] == True:
+            screen.blit(sword_left,(screen_x/2-252-169,screen_y/2-42+270))
+            screen.blit(sword_right,(screen_x/2+252,screen_y/2-42+270))
+            pygame.display.update()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                menu_dict["play"] = False
+                menu_dict["settings"] = False
+                menu_dict["highscore"] = False
+                menu_dict["how to play"] = False
+
+        
+
+        '''if menu_dict["singleplayer"]==True:
             screen.blit(singleplayer,(screen_x/2-337,screen_y/2-149))
         
         if singleplayer_rect.collidepoint(mouse_x,mouse_y) and menu_dict["singleplayer"] == True:
@@ -136,7 +187,7 @@ def menu():
             screen.blit(sword_right,(screen_x/2+232,screen_y/2+52))
             pygame.display.update()
             if event !=None and event.type == pygame.MOUSEBUTTONDOWN:
-                return ["join"]
+                return ["join"]'''
         
 
 
@@ -145,7 +196,7 @@ def menu():
 
 def menu_bg(mouse_x,mouse_y):
 
-    move_menu_frame = pygame.image.load('gvgh\menu main2.png')
+    move_menu_frame = pygame.image.load('menu\menu main2.png')
 
 
     screen_x,screen_y=screen.get_size()
