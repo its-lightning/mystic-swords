@@ -1,5 +1,6 @@
 import cv2
 import pygame
+import highscoredisplay
 
 
 screen = pygame.display.set_mode((1366,768),pygame.RESIZABLE)
@@ -10,7 +11,7 @@ def menu_music():
     pygame.mixer.music.play(1)
     
 def menu():
-    '''vidcap = cv2.VideoCapture('menu\menu frame.mkv')
+    vidcap = cv2.VideoCapture('menu\menu frame.mkv')
     menu_music()
     while True:
         for event in pygame.event.get():
@@ -46,7 +47,7 @@ def menu():
             screen.blit(menu_frame,((screen_x-frame_x)//2,(screen_y-frame_y)//2))
             pygame.display.update()
         else:
-            break'''
+            break
     
     screen_x,screen_y=screen.get_size()
     pygame.mouse.set_pos(screen_x/2,screen_y/2)
@@ -58,6 +59,8 @@ def menu():
     settings = pygame.image.load('menu\settings.png')
     
     highscore = pygame.image.load('menu\highscore.png')
+
+    done = pygame.image.load('menu\done.png')
     
     singleplayer = pygame.image.load('menu\singleplayer.png')
 
@@ -69,7 +72,7 @@ def menu():
 
     sword_left = pygame.image.load('menu\sword left.png')
     sword_right = pygame.image.load('menu\sword right.png')
-    menu_dict={"play":True,"settings":True,"how to play":True,"highscore":True,"singleplayer":False,"multiplayer":False,"create":False,"join":False}
+    menu_dict={"play":True,"settings":True,"how to play":True,"highscore":True,"singleplayer":False,"multiplayer":False,"create":False,"join":False,"done":False,"highmenu":False}
 
     
     while True:
@@ -82,20 +85,37 @@ def menu():
         screen_x,screen_y=screen.get_size()
         
         play_rect = pygame.Rect(screen_x/2-115,screen_y/2-49-270,230,98)
-        how_to_play_rect = pygame.Rect(screen_x/2-115,screen_y/2-49-85,230,98)
-        settings_rect = pygame.Rect(screen_x/2-115,screen_y/2-49+85,230,98)
-        highscore_rect = pygame.Rect(screen_x/2-115,screen_y/2-49+270,230,98)
+        how_to_play_rect = pygame.Rect(screen_x/2-287,screen_y/2-49-85,574,98)
+        settings_rect = pygame.Rect(screen_x/2-231,screen_y/2-49+85,463,98)
+        highscore_rect = pygame.Rect(screen_x/2-258,screen_y/2-49+270,504,98)
+
+        done_rect = pygame.Rect(screen_x-200,screen_y-100,217,98)
 
         singleplayer_rect = pygame.Rect(screen_x/2-337,screen_y/2-149,674,98)
         multiplayer_rect = pygame.Rect(screen_x/2-325,screen_y/2+49,650,98)
 
         create_rect = pygame.Rect(screen_x/2-315,screen_y/2-149,631,98)
         join_rect = pygame.Rect(screen_x/2-232,screen_y/2+49,464,98)
+
+        if menu_dict["done"]==True:
+            screen.blit(done,(screen_x-200,screen_y-100))
+            
+        if menu_dict["done"]==True and done_rect.collidepoint(mouse_x,mouse_y):
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                menu_dict["done"] = False
+                menu_dict["play"] = True
+                menu_dict["settings"] = True
+                menu_dict["highscore"] = True
+                menu_dict["how to play"] = True
+                menu_dict["highmenu"] = False
+
+        if menu_dict["highmenu"]==True:
+            highscoredisplay.display()
         
         if menu_dict["play"]==True:
             screen.blit(play,(screen_x/2-115,screen_y/2-49-270))
 
-        if play_rect.collidepoint(mouse_x,mouse_y) and menu_dict["play"] == True:
+        if menu_dict["play"] == True and play_rect.collidepoint(mouse_x,mouse_y):
             screen.blit(sword_left,(screen_x/2-115-169,screen_y/2-42-270))
             screen.blit(sword_right,(screen_x/2+115,screen_y/2-42-270))
             pygame.display.update()
@@ -107,7 +127,7 @@ def menu():
         if menu_dict["settings"]==True:
             screen.blit(settings,(screen_x/2-231,screen_y/2-49+85))
 
-        if settings_rect.collidepoint(mouse_x,mouse_y) and menu_dict["settings"] == True:
+        if menu_dict["settings"] == True and settings_rect.collidepoint(mouse_x,mouse_y):
             screen.blit(sword_left,(screen_x/2-231-169,screen_y/2-42+85))
             screen.blit(sword_right,(screen_x/2+231,screen_y/2-42+85))
             pygame.display.update()
@@ -120,7 +140,7 @@ def menu():
         if menu_dict["how to play"]==True:
             screen.blit(how_to_play,(screen_x/2-287,screen_y/2-49-85))
 
-        if how_to_play_rect.collidepoint(mouse_x,mouse_y) and menu_dict["how to play"] == True:
+        if menu_dict["how to play"] == True and how_to_play_rect.collidepoint(mouse_x,mouse_y):
             screen.blit(sword_left,(screen_x/2-287-169,screen_y/2-42-85))
             screen.blit(sword_right,(screen_x/2+287,screen_y/2-42-85))
             pygame.display.update()
@@ -133,7 +153,7 @@ def menu():
         if menu_dict["highscore"]==True:
             screen.blit(highscore,(screen_x/2-252,screen_y/2-49+270))
 
-        if highscore_rect.collidepoint(mouse_x,mouse_y) and menu_dict["highscore"] == True:
+        if menu_dict["highscore"] == True and highscore_rect.collidepoint(mouse_x,mouse_y):
             screen.blit(sword_left,(screen_x/2-252-169,screen_y/2-42+270))
             screen.blit(sword_right,(screen_x/2+252,screen_y/2-42+270))
             pygame.display.update()
@@ -142,6 +162,8 @@ def menu():
                 menu_dict["settings"] = False
                 menu_dict["highscore"] = False
                 menu_dict["how to play"] = False
+                menu_dict["highmenu"] = True
+                menu_dict["done"] = True
 
         
 

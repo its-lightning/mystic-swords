@@ -38,7 +38,7 @@ def servermain():
 
 if menu_info[0] == "singleplayer":
     singleplayergame.keys(p2)
-    singleplayergame.main(screen)
+    singleplayergame.main()
 
 elif menu_info[0] == "create":
     thread1=threading.Thread(target=servermain)

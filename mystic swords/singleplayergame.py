@@ -2,6 +2,8 @@ from types import MappingProxyType
 import pygame
 import time
 
+screen = pygame.display.set_mode((1366,768))
+
 keylist=[]
 playerdata=[100,100,"down",2]
 
@@ -31,8 +33,6 @@ downlist = [down1,down2,down3]
 
 increase = 50
 
-
-
 for i in range(0,3):
     
     rightlist[i] = pygame.transform.scale(rightlist[i], (increase,increase))
@@ -45,6 +45,42 @@ for i in range(0,3):
     leftlist[i].set_colorkey((255,255,255))
     
 moveno = [0,0,0,0]
+
+sup1 = pygame.image.load('player/sup 1.png')
+sup2 = pygame.image.load('player/sup 2.png')
+sup3 = pygame.image.load('player/sup 3.png')
+
+sdown1 = pygame.image.load('player/sdown 1.png')
+sdown2 = pygame.image.load('player/sdown 2.png')
+sdown3 = pygame.image.load('player/sdown 3.png')
+
+sright1 = pygame.image.load('player/sright 1.png')
+sright2 = pygame.image.load('player/sright 2.png')
+sright3 = pygame.image.load('player/sright 3.png')
+
+sleft1 = pygame.image.load('player/sleft 1.png')
+sleft2 = pygame.image.load('player/sleft 2.png')
+sleft3 = pygame.image.load('player/sleft 3.png')
+
+sup1 = pygame.transform.scale(sup1, (increase,increase))
+sup2 = pygame.transform.scale(sup2, (increase,increase))
+sup3 = pygame.transform.scale(sup3, (increase,increase))
+
+sdown1 = pygame.transform.scale(sdown1, (80,increase))
+sdown2 = pygame.transform.scale(sdown2, (80,increase))
+sdown3 = pygame.transform.scale(sdown3, (80,increase))
+
+sright1 = pygame.transform.scale(sright1, (increase,increase))
+sright2 = pygame.transform.scale(sright2, (increase,increase))
+sright3 = pygame.transform.scale(sright3, (increase,increase))
+
+sleft1 = pygame.transform.scale(sleft1, (increase,increase))
+sleft2 = pygame.transform.scale(sleft2, (increase,increase))
+sleft3 = pygame.transform.scale(sleft3, (increase,increase))
+
+
+
+swordno = [0,0,0,0]
 
 pygame.init()
 
@@ -62,13 +98,69 @@ def keysheld(pressedlist,event):
             pass
     return pressedlist
 
+def swordframe():
+    pygame.display.update()
+    time.sleep(0.08)
+
+def mapdis():
+    screen.blit(map,(0,0))
+
+def sword():
+    if playerdata[2] == "down":
+        mapdis()
+        screen.blit(sdown1,(playerdata[0],playerdata[1]))
+        swordframe()
+        mapdis()
+        screen.blit(sdown2,(playerdata[0],playerdata[1]))
+        swordframe()
+        mapdis()
+        screen.blit(sdown3,(playerdata[0],playerdata[1]))
+        swordframe()
+
+    elif playerdata[2] == "right":
+        mapdis()
+        screen.blit(sright1,(playerdata[0],playerdata[1]))
+        swordframe()
+        mapdis()
+        screen.blit(sright2,(playerdata[0],playerdata[1]))
+        swordframe()
+        mapdis()
+        screen.blit(sright3,(playerdata[0],playerdata[1]))
+        swordframe()
+
+    elif playerdata[2] == "left":
+        mapdis()
+        screen.blit(sleft1,(playerdata[0],playerdata[1]))
+        swordframe()
+        mapdis()
+        screen.blit(sleft2,(playerdata[0],playerdata[1]))
+        swordframe()
+        mapdis()
+        screen.blit(sleft3,(playerdata[0],playerdata[1]))
+        swordframe()
+
+    elif playerdata[2] == "up":
+        mapdis()
+        screen.blit(sup1,(playerdata[0],playerdata[1]))
+        swordframe()
+        mapdis()
+        screen.blit(sup2,(playerdata[0],playerdata[1]))
+        swordframe()
+        mapdis()
+        screen.blit(sup3,(playerdata[0],playerdata[1]))
+        swordframe()
+
 def movement(pressedlist):
     directionlist = []
     xyposreturn = [playerdata[0],playerdata[1]]
+
     for i in pressedlist:
         if i in "10097119115":
             directionlist.append(i)
-    
+        if i in "101":
+            sword()
+            return playerdata[0],playerdata[1]
+
     if len(directionlist) == 1:
         if directionlist[-1] == keylist[0]:                   #right
             if moveno[0] == 2:
@@ -193,15 +285,13 @@ def movement(pressedlist):
     else:
         return xyposreturn
 
-def main(screen):
+def main():
     pressedlist = []
     while True:
         for event in pygame.event.get():
             pressedlist = keysheld(pressedlist,event)
-        print(playerdata)
         playerdata[0],playerdata[1] = movement(pressedlist)
         screen.blit(map,(0,0))
-        print(downlist)
         if playerdata[2] == "right":
             screen.blit(rightlist[moveno[0]],(playerdata[0],playerdata[1]))
         if playerdata[2] == "left":
