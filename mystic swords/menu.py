@@ -1,7 +1,7 @@
 import cv2
 import pygame
 import highscoredisplay
-
+import settingsdisplay
 
 screen = pygame.display.set_mode((1366,768),pygame.RESIZABLE)
 
@@ -10,8 +10,8 @@ def menu_music():
     pygame.mixer.music.load("menu\menu.mp3")
     pygame.mixer.music.play(1)
     
-def menu():
-    vidcap = cv2.VideoCapture('menu\menu frame.mkv')
+def menu(keylist):
+    '''vidcap = cv2.VideoCapture('menu\menu frame.mkv')
     menu_music()
     while True:
         for event in pygame.event.get():
@@ -47,7 +47,7 @@ def menu():
             screen.blit(menu_frame,((screen_x-frame_x)//2,(screen_y-frame_y)//2))
             pygame.display.update()
         else:
-            break
+            break'''
     
     screen_x,screen_y=screen.get_size()
     pygame.mouse.set_pos(screen_x/2,screen_y/2)
@@ -60,7 +60,7 @@ def menu():
     
     highscore = pygame.image.load('menu\highscore.png')
 
-    done = pygame.image.load('menu\done.png')
+    back = pygame.image.load(r'menu\back.png')
     
     singleplayer = pygame.image.load('menu\singleplayer.png')
 
@@ -72,7 +72,8 @@ def menu():
 
     sword_left = pygame.image.load('menu\sword left.png')
     sword_right = pygame.image.load('menu\sword right.png')
-    menu_dict={"play":True,"settings":True,"how to play":True,"highscore":True,"singleplayer":False,"multiplayer":False,"create":False,"join":False,"done":False,"highmenu":False}
+
+    menu_dict={"play":True,"settings":True,"how to play":True,"highscore":True,"singleplayer":False,"multiplayer":False,"create":False,"join":False,"back":False,"highmenu":False,"settmenu":False}
 
     
     while True:
@@ -83,31 +84,36 @@ def menu():
         mouse_x,mouse_y = pygame.mouse.get_pos()
         menu_bg(mouse_x,mouse_y)
         screen_x,screen_y=screen.get_size()
-        
+
         play_rect = pygame.Rect(screen_x/2-115,screen_y/2-49-270,230,98)
         how_to_play_rect = pygame.Rect(screen_x/2-287,screen_y/2-49-85,574,98)
         settings_rect = pygame.Rect(screen_x/2-231,screen_y/2-49+85,463,98)
         highscore_rect = pygame.Rect(screen_x/2-258,screen_y/2-49+270,504,98)
 
-        done_rect = pygame.Rect(screen_x-200,screen_y-100,217,98)
+        back_rect = pygame.Rect(screen_x-240,screen_y-140,217,98)
 
         singleplayer_rect = pygame.Rect(screen_x/2-337,screen_y/2-149,674,98)
         multiplayer_rect = pygame.Rect(screen_x/2-325,screen_y/2+49,650,98)
 
         create_rect = pygame.Rect(screen_x/2-315,screen_y/2-149,631,98)
         join_rect = pygame.Rect(screen_x/2-232,screen_y/2+49,464,98)
-
-        if menu_dict["done"]==True:
-            screen.blit(done,(screen_x-200,screen_y-100))
+        
+        
+        if menu_dict["back"]==True:
+            screen.blit(back,(screen_x-240,screen_y-140))
             
-        if menu_dict["done"]==True and done_rect.collidepoint(mouse_x,mouse_y):
+        if menu_dict["back"]==True and back_rect.collidepoint(mouse_x,mouse_y):
             if event.type == pygame.MOUSEBUTTONDOWN:
-                menu_dict["done"] = False
+                menu_dict["back"] = False
                 menu_dict["play"] = True
                 menu_dict["settings"] = True
                 menu_dict["highscore"] = True
                 menu_dict["how to play"] = True
                 menu_dict["highmenu"] = False
+                menu_dict["settmenu"] = False
+
+        if menu_dict["settmenu"]==True:
+            keylist = settingsdisplay.display(event,keylist)
 
         if menu_dict["highmenu"]==True:
             highscoredisplay.display()
@@ -120,10 +126,16 @@ def menu():
             screen.blit(sword_right,(screen_x/2+115,screen_y/2-42-270))
             pygame.display.update()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                return ["singleplayer"]
-                '''menu_dict["play"]=False
+                #return ["singleplayer"]                
+                menu_dict["play"]=False
                 menu_dict["singleplayer"]=True
-                menu_dict["multiplayer"]=True'''
+                menu_dict["multiplayer"]=True
+                menu_dict["play"] = False
+                menu_dict["settings"] = False
+                menu_dict["highscore"] = False
+                menu_dict["how to play"] = False
+                menu_dict["back"] = True
+
         if menu_dict["settings"]==True:
             screen.blit(settings,(screen_x/2-231,screen_y/2-49+85))
 
@@ -136,7 +148,9 @@ def menu():
                 menu_dict["settings"] = False
                 menu_dict["highscore"] = False
                 menu_dict["how to play"] = False
-        
+                menu_dict["back"] = True
+                menu_dict["settmenu"] = True
+
         if menu_dict["how to play"]==True:
             screen.blit(how_to_play,(screen_x/2-287,screen_y/2-49-85))
 
@@ -163,11 +177,11 @@ def menu():
                 menu_dict["highscore"] = False
                 menu_dict["how to play"] = False
                 menu_dict["highmenu"] = True
-                menu_dict["done"] = True
+                menu_dict["back"] = True
 
-        
 
-        '''if menu_dict["singleplayer"]==True:
+        #---------------------------------\/multiplayer\/---------------------------------#
+        if menu_dict["singleplayer"]==True:
             screen.blit(singleplayer,(screen_x/2-337,screen_y/2-149))
         
         if singleplayer_rect.collidepoint(mouse_x,mouse_y) and menu_dict["singleplayer"] == True:
@@ -175,7 +189,7 @@ def menu():
             screen.blit(sword_right,(screen_x/2+337,screen_y/2-142))
             pygame.display.update()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                return ["singleplayer"]
+                return ["singleplayer"],keylist
             
         if menu_dict["multiplayer"]==True:
             screen.blit(multiplayer,(screen_x/2-325,screen_y/2+49))
@@ -209,7 +223,8 @@ def menu():
             screen.blit(sword_right,(screen_x/2+232,screen_y/2+52))
             pygame.display.update()
             if event !=None and event.type == pygame.MOUSEBUTTONDOWN:
-                return ["join"]'''
+                return ["join"]
+        #---------------------------------^multiplayer^---------------------------------#
         
 
 

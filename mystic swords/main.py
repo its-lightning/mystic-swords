@@ -10,19 +10,26 @@ import singleplayergame
 pygame.display.set_caption("Mystic Sword")
 
 
-screen = pygame.display.set_mode((1366,768),pygame.RESIZABLE)
+screen = pygame.display.set_mode((1366,768))
 
 stable = pygame.image.load('player\stable 1.png')
 
-keylist=[]
+#right left up down space \/
+keylist=["100","97","119","115","32"]
 
-p2=["100","97","119","115"]
+menu_info,keylist = menu.menu(keylist)
+#menu_info=["singleplayer"]
 
-menu_info=menu.menu()
 pygame.display.update()
 
 pygame.init()
 
+
+            
+def servermain():
+    os.startfile("servermain.py")
+
+#---------------------------------\/multiplayer\/---------------------------------#
 def clientfun(hostip,ip,screen):
     client.ip(hostip)
     multiplayerkeys.ip(ip)
@@ -32,14 +39,14 @@ def clientfun(hostip,ip,screen):
             movelist=multiplayerkeys.movement(keylist,event)
         else:
             client.get(screen)
-            
-def servermain():
-    os.startfile("servermain.py")
+#---------------------------------^multiplayer^---------------------------------#
+
 
 if menu_info[0] == "singleplayer":
-    singleplayergame.keys(p2)
+    singleplayergame.keys(keylist)
     singleplayergame.main()
 
+#---------------------------------\/multiplayer\/---------------------------------#
 elif menu_info[0] == "create":
     thread1=threading.Thread(target=servermain)
     thread1.start()
@@ -69,4 +76,5 @@ elif menu_info[0] == "join":
     ip=ip.split(".")
     ip=ip[-1]
     del socket
-    clientfun(hostip,ip,screen)            
+    clientfun(hostip,ip,screen)
+#---------------------------------^multiplayer^---------------------------------#
