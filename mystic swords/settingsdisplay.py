@@ -59,7 +59,6 @@ def display(event,keylist):
     colltileno = 0
     
     for i in colltile:
-        print(i)
         if i.collidepoint(pygame.mouse.get_pos()) and event.type == pygame.MOUSEBUTTONDOWN:
             loop = True
             while loop:

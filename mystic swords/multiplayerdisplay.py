@@ -15,6 +15,7 @@ def display(data,screen):
     for i in data:
         if i[0] != '-1' and i[0] != "":
             screen.fill((0,0,0))
+            print(int(i[1]),int(i[2]))
             screen.blit(stable,(int(i[1]),int(i[2])))
             pygame.display.update()
 

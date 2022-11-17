@@ -1,6 +1,7 @@
 from types import MappingProxyType
 import pygame
 import time
+import threading
 
 screen = pygame.display.set_mode((1366,768))
 
@@ -288,7 +289,8 @@ def movement(pressedlist):
     else:
         return xyposreturn
 
-def main():
+
+def player():
     pressedlist = []
     while True:
         for event in pygame.event.get():
@@ -306,3 +308,23 @@ def main():
         time.sleep(0.04)
 
         pygame.display.update()
+
+
+#----------------------------------------------------------------------------^player
+
+
+def ghosts():
+    while True:
+        print("aaa")
+
+
+#----------------------------------------------------------------------------^ghosts
+
+def main():
+    While True
+    if __name__ =="__main__":
+        playerthread = threading.Thread(target = player)
+        ghoststhread = threading.Thread(target = ghosts)
+
+        ghoststhread.start()
+        playerthread.start()

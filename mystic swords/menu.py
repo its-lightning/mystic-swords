@@ -2,6 +2,7 @@ import cv2
 import pygame
 import highscoredisplay
 import settingsdisplay
+import time
 
 screen = pygame.display.set_mode((1366,768),pygame.RESIZABLE)
 
@@ -52,6 +53,10 @@ def menu(keylist):
     screen_x,screen_y=screen.get_size()
     pygame.mouse.set_pos(screen_x/2,screen_y/2)
 
+    next = pygame.image.load(r'menu\next.png')
+
+    back = pygame.image.load(r'menu\back.png')
+
     play = pygame.image.load('menu\play.png')
 
     how_to_play = pygame.image.load('menu\how to play.png')
@@ -59,8 +64,6 @@ def menu(keylist):
     settings = pygame.image.load('menu\settings.png')
     
     highscore = pygame.image.load('menu\highscore.png')
-
-    back = pygame.image.load(r'menu\back.png')
     
     singleplayer = pygame.image.load('menu\singleplayer.png')
 
@@ -70,10 +73,14 @@ def menu(keylist):
 
     join_game = pygame.image.load('menu\join game.png')
 
+    htp = [pygame.image.load('menu\htp1.png'),pygame.image.load('menu\htp2.png'),pygame.image.load('menu\htp3.png')]
+
     sword_left = pygame.image.load('menu\sword left.png')
     sword_right = pygame.image.load('menu\sword right.png')
 
-    menu_dict={"play":True,"settings":True,"how to play":True,"highscore":True,"singleplayer":False,"multiplayer":False,"create":False,"join":False,"back":False,"highmenu":False,"settmenu":False}
+    nextno = 0
+
+    menu_dict={"play":True,"settings":True,"how to play":True,"highscore":True,"singleplayer":False,"multiplayer":False,"create":False,"join":False,"back":False,"highmenu":False,"settmenu":False,"htpmenu":False,"next":False}
 
     
     while True:
@@ -91,6 +98,7 @@ def menu(keylist):
         highscore_rect = pygame.Rect(screen_x/2-258,screen_y/2-49+270,504,98)
 
         back_rect = pygame.Rect(screen_x-240,screen_y-140,217,98)
+        next_rect = pygame.Rect(screen_x-240,screen_y-140,217,98)
 
         singleplayer_rect = pygame.Rect(screen_x/2-337,screen_y/2-149,674,98)
         multiplayer_rect = pygame.Rect(screen_x/2-325,screen_y/2+49,650,98)
@@ -111,6 +119,28 @@ def menu(keylist):
                 menu_dict["how to play"] = True
                 menu_dict["highmenu"] = False
                 menu_dict["settmenu"] = False
+                menu_dict["singleplayer"] = False
+                menu_dict["multiplayer"] = False 
+                menu_dict["next"] = False     
+                menu_dict["htpmenu"] = False
+                nextno = 0 
+
+        if menu_dict["htpmenu"]==True:
+            screen.blit(htp[nextno-1],(screen_x/2-325,screen_y/2-200))
+            pygame.display.update()
+
+        if menu_dict["next"]==True:
+            screen.blit(next,(screen_x-240,screen_y-140))
+
+        if menu_dict["next"]==True and next_rect.collidepoint(mouse_x,mouse_y):
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if nextno == 2:
+                    menu_dict["back"] = True
+                    menu_dict["next"] = False
+                    nextno +=1
+                else:
+                    nextno +=1
+                time.sleep(0.1)
 
         if menu_dict["settmenu"]==True:
             keylist = settingsdisplay.display(event,keylist)
@@ -163,6 +193,10 @@ def menu(keylist):
                 menu_dict["settings"] = False
                 menu_dict["highscore"] = False
                 menu_dict["how to play"] = False
+                menu_dict["htpmenu"] = True
+                menu_dict["next"] = True
+                nextno += 1
+
         
         if menu_dict["highscore"]==True:
             screen.blit(highscore,(screen_x/2-252,screen_y/2-49+270))
@@ -213,7 +247,7 @@ def menu(keylist):
             screen.blit(sword_right,(screen_x/2+315,screen_y/2-142))
             pygame.display.update()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                return ["create"]
+                return ["create"],keylist
             
         if menu_dict["join"]==True:
             screen.blit(join_game,(screen_x/2-232,screen_y/2+49))
@@ -223,7 +257,7 @@ def menu(keylist):
             screen.blit(sword_right,(screen_x/2+232,screen_y/2+52))
             pygame.display.update()
             if event !=None and event.type == pygame.MOUSEBUTTONDOWN:
-                return ["join"]
+                return ["join"],keylist
         #---------------------------------^multiplayer^---------------------------------#
         
 

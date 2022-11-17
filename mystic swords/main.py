@@ -25,18 +25,18 @@ pygame.display.update()
 pygame.init()
 
 
+#---------------------------------\/multiplayer\/---------------------------------#
             
 def servermain():
     os.startfile("servermain.py")
 
-#---------------------------------\/multiplayer\/---------------------------------#
 def clientfun(hostip,ip,screen):
     client.ip(hostip)
     multiplayerkeys.ip(ip)
     while True:
         for event in pygame.event.get():
             client.get(screen)
-            movelist=multiplayerkeys.movement(keylist,event)
+            movelist=multiplayerkeys.movement(["100","97","119","115"],event)
         else:
             client.get(screen)
 #---------------------------------^multiplayer^---------------------------------#
