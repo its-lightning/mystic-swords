@@ -17,8 +17,8 @@ stable = pygame.image.load('player\stable 1.png')
 #right left up down space \/
 keylist=["100","97","119","115","32"]
 
-menu_info,keylist = menu.menu(keylist)
-#menu_info=["singleplayer"]
+#menu_info,keylist = menu.menu(keylist)
+menu_info=["singleplayer"]
 
 pygame.display.update()
 

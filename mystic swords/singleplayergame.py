@@ -2,11 +2,16 @@ from types import MappingProxyType
 import pygame
 import time
 import threading
+import random
 
 screen = pygame.display.set_mode((1366,768))
 
 keylist=[]
-playerdata=[1000,600,"down",10]
+playerdata=[1200,380,"down",10]
+
+pygame.init()
+
+font = pygame.font.Font('AngelRhapsoy.ttf',64)
 
 map = pygame.image.load('map/map.png')
 
@@ -79,7 +84,15 @@ sleft1 = pygame.transform.scale(sleft1, (66,66))
 sleft2 = pygame.transform.scale(sleft2, (78,60))
 sleft3 = pygame.transform.scale(sleft3, (84,50))
 
+ghostmove = pygame.image.load('player\gmove.png')
+ghoststeady = pygame.image.load('player\gsteady.png')
 
+ghostlist = []
+maxghostno = 1
+waveno = 0
+steadyno = 50
+
+sword_rect = sword_rect = pygame.Rect(-100,-100,10,10)
 
 swordno = [0,0,0,0]
 
@@ -99,7 +112,15 @@ def keysheld(pressedlist,event):
             pass
     return pressedlist
 
+def ghostdis():
+    for i in ghostlist:
+        if steadyno > 50:
+            screen.blit(ghoststeady,(i[0],i[1]))
+        else:
+            screen.blit(ghoststeady,(i[0],i[1]))
+
 def swordframe():
+    ghostdis()
     pygame.display.update()
     time.sleep(0.04)
 
@@ -107,7 +128,10 @@ def mapdis():
     screen.blit(map,(0,0))
 
 def sword():
+    global sword_rect
     if playerdata[2] == "down":
+        sword_rect = pygame.Rect(playerdata[0]-2,playerdata[1]-2,50,100)
+        #pygame.draw.rect(screen, (255,0,0), sword_rect)
         mapdis()
         screen.blit(sdown1,(playerdata[0]-4,playerdata[1]-14))
         swordframe()
@@ -119,6 +143,7 @@ def sword():
         swordframe()
 
     elif playerdata[2] == "right":
+        sword_rect = pygame.Rect(playerdata[0]-2,playerdata[1]-2,100,50)
         mapdis()
         screen.blit(sright1,(playerdata[0]-14,playerdata[1]-18))
         swordframe()
@@ -130,6 +155,7 @@ def sword():
         swordframe()
 
     elif playerdata[2] == "left":
+        sword_rect = pygame.Rect(playerdata[0]-52,playerdata[1]-2,100,50)
         mapdis()
         screen.blit(sleft1,(playerdata[0],playerdata[1]-18))
         swordframe()
@@ -141,6 +167,7 @@ def sword():
         swordframe()
 
     elif playerdata[2] == "up":
+        sword_rect = pygame.Rect(playerdata[0]-2,playerdata[1]-52,50,100)
         mapdis()
         screen.blit(sup1,(playerdata[0],playerdata[1]))
         swordframe()
@@ -155,13 +182,13 @@ def movement(pressedlist):
     directionlist = []
     xyposreturn = [playerdata[0],playerdata[1]]
 
-    #print(moveno)
 
     for i in pressedlist:
         if i in keylist[0:4]:
             directionlist.append(i)
         if i in keylist[4:5]:
             sword()
+            sword_rect = pygame.Rect(-100,-100,10,10)
             return playerdata[0],playerdata[1]
 
     if len(directionlist) == 1:
@@ -265,7 +292,6 @@ def movement(pressedlist):
     def emptret():
         return playerdata[0],playerdata[1]
 
-    print(playerdata)
     
     if xyposreturn[0] > 1310 and xyposreturn[1] > 694:
         return emptret()
@@ -288,15 +314,61 @@ def movement(pressedlist):
         return playerdata[0],playerdata[1]
     else:
         return xyposreturn
+    
+def ghost(i):
+    print(i,ghostlist)
+    try:
+        disx = random.randint(8,11)
+        disy = random.randint(8,11)
+        ran = random.randint(1,3)
+
+        ghostlist[i][0] -= disx #displacmentx
+        
+        if ran == 1: #displacmenty
+            ghostlist[i][1] -= disy
+        elif ran == 2:
+            ghostlist[i][1] += disy
+        else:
+            ghostlist[i][1] += disy
+
+        if sword_rect.collidepoint(ghostlist[i][0]+10,ghostlist[i][1]+15):
+            print(i,"aaaaaaaaaaaaaaaaaaaaaa")
+            ghostlist.remove(ghostlist[i])
+    except IndexError:
+        pass
+
+                
+def wave():
+    global waveno,maxghostno
+    waveno += 1
+    maxghostno += random.randint(5,20)#noincrease
+
+    for i in range(0,maxghostno):
+        ghostlist.append([random.randint(1100,1310),random.randint(40,649),2])
+
+    while ghostlist != [] :
+        for i in range(len(ghostlist)):
+            temp = len(ghostlist)
+            ghostthread = threading.Thread(target = ghost(i))
+            ghostthread.start()
+
+            #if temp != len(ghostlist):
+            #    i -= temp
+
+            time.sleep(0.02)
+           
 
 
-def player():
+
+
+def main():
     pressedlist = []
     while True:
         for event in pygame.event.get():
             pressedlist = keysheld(pressedlist,event)
         playerdata[0],playerdata[1] = movement(pressedlist)
         screen.blit(map,(0,0))
+        ghostdis()
         if playerdata[2] == "right":
             screen.blit(rightlist[moveno[0]],(playerdata[0],playerdata[1]))
         if playerdata[2] == "left":
@@ -305,26 +377,19 @@ def player():
             screen.blit(uplist[moveno[2]],(playerdata[0],playerdata[1]))
         if playerdata[2] == "down":
             screen.blit(downlist[moveno[3]],(playerdata[0],playerdata[1]))
-        time.sleep(0.04)
+        time.sleep(0.02)
 
         pygame.display.update()
 
+        if ghostlist == []:
+            playerdata[0],playerdata[1] = 200,380
+            screen.blit(map,(0,0))
+            screen.blit(rightlist[moveno[0]],(playerdata[0],playerdata[1]))
+            screen.blit(font.render("WAVE "+str(waveno+1),True,(255,0,0)),(550,350))
+            pygame.display.update()
+            time.sleep(0.5)
+            wavethread = threading.Thread(target = wave)
+            wavethread.start()
+            
 
-#----------------------------------------------------------------------------^player
-
-
-def ghosts():
-    while True:
-        print("aaa")
-
-
-#----------------------------------------------------------------------------^ghosts
-
-def main():
-    While True
-    if __name__ =="__main__":
-        playerthread = threading.Thread(target = player)
-        ghoststhread = threading.Thread(target = ghosts)
-
-        ghoststhread.start()
-        playerthread.start()
+        time.sleep(0.04)
