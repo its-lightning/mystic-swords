@@ -12,7 +12,7 @@ def menu_music():
     pygame.mixer.music.play(1)
     
 def menu(keylist):
-    '''vidcap = cv2.VideoCapture('menu\menu frame.mkv')
+    vidcap = cv2.VideoCapture('menu\menu frame.mkv')
     menu_music()
     while True:
         for event in pygame.event.get():
@@ -48,7 +48,7 @@ def menu(keylist):
             screen.blit(menu_frame,((screen_x-frame_x)//2,(screen_y-frame_y)//2))
             pygame.display.update()
         else:
-            break'''
+            break
     
     screen_x,screen_y=screen.get_size()
     pygame.mouse.set_pos(screen_x/2,screen_y/2)

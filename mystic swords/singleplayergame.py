@@ -1,15 +1,17 @@
-from types import MappingProxyType
+from datetime import datetime
 import pygame
 import time
 import threading
 import random
+import pickle
 
 screen = pygame.display.set_mode((1366,768))
 
+pygame.init()
+
+
 keylist=[]
 playerdata=[1200,380,"down",10]
-
-pygame.init()
 
 font = pygame.font.Font('AngelRhapsoy.ttf',64)
 
@@ -90,13 +92,34 @@ ghoststeady = pygame.image.load('player\gsteady.png')
 ghostlist = []
 maxghostno = 1
 waveno = 0
-steadyno = 50
+steadyno = 1
 
 sword_rect = sword_rect = pygame.Rect(-100,-100,10,10)
 
 swordno = [0,0,0,0]
 
 pygame.init()
+
+runtime = 1
+running = True
+
+def gameover():
+    screen.blit(font.render("GAME OVER",True,(255,0,0)),(550,350))
+    addhighscore()    
+
+
+def addhighscore():    
+    fh = open("highscore.dat","rb")
+    data = []
+    while True:
+        try:
+            rec = pickle.load(fh)
+            data.append([rec[1],rec[2]])
+        except EOFError:
+            fh.close()
+            break
+    data.append([runtime,datetime.now().strftime(r"%d/%m/%Y")])
+    print(data)
 
 def keys(l):
     global keylist
@@ -112,6 +135,12 @@ def keysheld(pressedlist,event):
             pass
     return pressedlist
 
+def timedis():
+    if runtime == runtime//1:
+        screen.blit(font.render(str(runtime)+"0",True,(255,0,0)),(1200,10))
+    else:
+        screen.blit(font.render(str(runtime)+str(random.randint(0,9)),True,(255,0,0)),(1200,10))
+
 def ghostdis():
     for i in ghostlist:
         if steadyno > 50:
@@ -120,6 +149,7 @@ def ghostdis():
             screen.blit(ghoststeady,(i[0],i[1]))
 
 def swordframe():
+    timedis()
     ghostdis()
     pygame.display.update()
     time.sleep(0.04)
@@ -316,24 +346,24 @@ def movement(pressedlist):
         return xyposreturn
     
 def ghost(i):
-    print(i,ghostlist)
     try:
-        disx = random.randint(8,11)
+        disx = 100 #random.randint(8,11)
         disy = random.randint(8,11)
         ran = random.randint(1,3)
 
-        ghostlist[i][0] -= disx #displacmentx
-        
-        if ran == 1: #displacmenty
+        ghostlist[i][0] -= disx #displacment
+        if ran == 1 and 200 < ghostlist[i][1] + disy: #displacmenty
             ghostlist[i][1] -= disy
-        elif ran == 2:
-            ghostlist[i][1] += disy
-        else:
+        if ran == 2 and 694 > ghostlist[i][1] + disy:
             ghostlist[i][1] += disy
 
+        if ghostlist[i][0] < 200:
+            gameover()
+
         if sword_rect.collidepoint(ghostlist[i][0]+10,ghostlist[i][1]+15):
-            print(i,"aaaaaaaaaaaaaaaaaaaaaa")
             ghostlist.remove(ghostlist[i])
+
+        time.sleep(0.01)
     except IndexError:
         pass
 
@@ -352,22 +382,25 @@ def wave():
             ghostthread = threading.Thread(target = ghost(i))
             ghostthread.start()
 
-            #if temp != len(ghostlist):
-            #    i -= temp
-
             time.sleep(0.02)
            
-
-
-
+def timer():
+    global runtime
+    while running:
+        time.sleep(0.01)
+        runtime = round(runtime + 0.01,2) 
+        
 
 def main():
     pressedlist = []
-    while True:
+    timethread = threading.Thread(target = timer)
+    timethread.start()
+    while running:
         for event in pygame.event.get():
             pressedlist = keysheld(pressedlist,event)
         playerdata[0],playerdata[1] = movement(pressedlist)
         screen.blit(map,(0,0))
+        timedis()
         ghostdis()
         if playerdata[2] == "right":
             screen.blit(rightlist[moveno[0]],(playerdata[0],playerdata[1]))
