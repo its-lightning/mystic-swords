@@ -22,7 +22,7 @@ menu.loadingmenu()
 while True:
     menu_info,keylist = menu.menu(keylist)
     #menu_info=["singleplayer"]
-    
+       
     pygame.display.update()
     
     pygame.init()

@@ -167,9 +167,8 @@ def escape():
                             keylist = settingsdisplay.display(event2,keylist)
                             screen.blit(back,(1366-240,768-140))
                             pygame.display.update()
-                            if back_rect.collidepoint(pygame.mouse.get_pos()):
-                                if event.type == pygame.MOUSEBUTTONDOWN:
-                                    setloop = False
+                            if back_rect.collidepoint(pygame.mouse.get_pos()) and event2.type == pygame.MOUSEBUTTONDOWN:
+                                setloop = False
                     escapeloop = False
     
 
@@ -477,7 +476,7 @@ def timer():
 
 def main():
     resetvalues()
-    global steadyno,sword_rect
+    global steadyno
     pressedlist = []
     timethread = threading.Thread(target = timer)
     timethread.start()
@@ -500,11 +499,11 @@ def main():
         if playerdata[2] == "down":
             screen.blit(downlist[moveno[3]],(playerdata[0],playerdata[1]))
         time.sleep(0.02)
-        sword_rect = sword_rect = pygame.Rect(-100,-100,10,10)
-
+        
         pygame.display.update()
 
         if ghostlist == []:
+            steadyno = 0
             playerdata[0],playerdata[1] = 200,380
             screen.blit(map,(0,0))
             screen.blit(rightlist[moveno[0]],(playerdata[0],playerdata[1]))
