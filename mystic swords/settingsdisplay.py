@@ -64,21 +64,18 @@ def display(event,keylist):
             while loop:
                 screen.blit(font.render("enter a control other than space",True,(255,0,0)),(630,20))
                 for event2 in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        quit()
                     pygame.display.update()
                     if event2.type == pygame.QUIT:
                         pygame.quit()
                     if event2.type == pygame.KEYDOWN:
                         if str(event2.key) not in keylist:
                             keylist[colltileno] = str(event2.key)
-                        loop = False
-                        break
-                        
-
-        
+                        return keylist
         colltileno += 1
               
             
 
 
     return keylist
-    pygame.display.update()

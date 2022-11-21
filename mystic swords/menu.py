@@ -3,6 +3,7 @@ import pygame
 import highscoredisplay
 import settingsdisplay
 import time
+import pickle
 
 screen = pygame.display.set_mode((1366,768),pygame.RESIZABLE)
 
@@ -11,7 +12,7 @@ def menu_music():
     pygame.mixer.music.load("menu\menu.mp3")
     pygame.mixer.music.play(1)
     
-def menu(keylist):
+def loadingmenu():
     vidcap = cv2.VideoCapture('menu\menu frame.mkv')
     menu_music()
     while True:
@@ -49,6 +50,8 @@ def menu(keylist):
             pygame.display.update()
         else:
             break
+
+def menu(keylist):
     
     screen_x,screen_y=screen.get_size()
     pygame.mouse.set_pos(screen_x/2,screen_y/2)
@@ -65,6 +68,8 @@ def menu(keylist):
     
     highscore = pygame.image.load('menu\highscore.png')
     
+    clearscore = pygame.image.load('menu\clear.png')
+    
     singleplayer = pygame.image.load('menu\singleplayer.png')
 
     multiplayer = pygame.image.load('menu\multiplayer.png')
@@ -73,14 +78,15 @@ def menu(keylist):
 
     join_game = pygame.image.load('menu\join game.png')
 
-    htp = [pygame.image.load('menu\htp1.png'),pygame.image.load('menu\htp2.png'),pygame.image.load('menu\htp3.png')]
-
+    htp = [pygame.image.load('menu\htp1.png'),pygame.image.load('menu\htp2.png')]
+    
+    
     sword_left = pygame.image.load('menu\sword left.png')
     sword_right = pygame.image.load('menu\sword right.png')
 
     nextno = 0
 
-    menu_dict={"play":True,"settings":True,"how to play":True,"highscore":True,"singleplayer":False,"multiplayer":False,"create":False,"join":False,"back":False,"highmenu":False,"settmenu":False,"htpmenu":False,"next":False}
+    menu_dict={"play":True,"settings":True,"how to play":True,"highscore":True,"singleplayer":False,"multiplayer":False,"create":False,"join":False,"back":False,"highmenu":False,"settmenu":False,"htpmenu":False,"next":False,"clearscore":False}
 
     
     while True:
@@ -98,6 +104,7 @@ def menu(keylist):
         highscore_rect = pygame.Rect(screen_x/2-258,screen_y/2-49+270,504,98)
 
         back_rect = pygame.Rect(screen_x-240,screen_y-140,217,98)
+        clear_rect = pygame.Rect(screen_x-240,screen_y-140-150,217,98)
         next_rect = pygame.Rect(screen_x-240,screen_y-140,217,98)
 
         singleplayer_rect = pygame.Rect(screen_x/2-337,screen_y/2-149,674,98)
@@ -123,10 +130,11 @@ def menu(keylist):
                 menu_dict["multiplayer"] = False 
                 menu_dict["next"] = False     
                 menu_dict["htpmenu"] = False
+                menu_dict["clearscore"] = False
                 nextno = 0 
 
         if menu_dict["htpmenu"]==True:
-            screen.blit(htp[nextno-1],(screen_x/2-325,screen_y/2-200))
+            screen.blit(htp[nextno-1],(10,10))
             pygame.display.update()
 
         if menu_dict["next"]==True:
@@ -134,7 +142,7 @@ def menu(keylist):
 
         if menu_dict["next"]==True and next_rect.collidepoint(mouse_x,mouse_y):
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if nextno == 2:
+                if nextno == 1:
                     menu_dict["back"] = True
                     menu_dict["next"] = False
                     nextno +=1
@@ -147,9 +155,20 @@ def menu(keylist):
 
         if menu_dict["highmenu"]==True:
             highscoredisplay.display()
+
+        if menu_dict["clearscore"] == True:
+            screen.blit(clearscore,(screen_x-240,screen_y-140-150))
+
+
+        if menu_dict["clearscore"] == True and clear_rect.collidepoint(mouse_x,mouse_y):
+            if event.type == pygame.MOUSEBUTTONDOWN:            
+                fh = open("highscore.dat","wb")
+                pickle.dump([0,0,"--/--/--"],fh)
+                fh.flush()
         
         if menu_dict["play"]==True:
             screen.blit(play,(screen_x/2-115,screen_y/2-49-270))
+
 
         if menu_dict["play"] == True and play_rect.collidepoint(mouse_x,mouse_y):
             screen.blit(sword_left,(screen_x/2-115-169,screen_y/2-42-270))
@@ -212,7 +231,7 @@ def menu(keylist):
                 menu_dict["how to play"] = False
                 menu_dict["highmenu"] = True
                 menu_dict["back"] = True
-
+                menu_dict["clearscore"] = True
 
         #---------------------------------\/multiplayer\/---------------------------------#
         if menu_dict["singleplayer"]==True:
@@ -272,6 +291,4 @@ def menu_bg(mouse_x,mouse_y):
 
     screen_x,screen_y=screen.get_size()
     move_x,move_y=(1920-680-mouse_x,1080-mouse_y-400)
-    screen_rect=pygame.Rect(0,0,screen_x,screen_y)
-    move_rect=pygame.Rect(move_x,move_y,1380,800)
     screen.blit(move_menu_frame,(screen_x-680-mouse_x,screen_y-mouse_y-400))

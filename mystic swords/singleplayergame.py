@@ -4,6 +4,8 @@ import time
 import threading
 import random
 import pickle
+import settingsdisplay
+import menu
 
 screen = pygame.display.set_mode((1366,768))
 
@@ -87,12 +89,16 @@ sleft2 = pygame.transform.scale(sleft2, (78,60))
 sleft3 = pygame.transform.scale(sleft3, (84,50))
 
 ghostmove = pygame.image.load('player\gmove.png')
+ghostmove1 = pygame.image.load('player\gmove1.png')
+ghostmove2 = pygame.image.load('player\gmove2.png')
 ghoststeady = pygame.image.load('player\gsteady.png')
 
+ghostspeed = 10
 ghostlist = []
 maxghostno = 1
 waveno = 0
 steadyno = 1
+escapeloop = False
 
 sword_rect = sword_rect = pygame.Rect(-100,-100,10,10)
 
@@ -103,10 +109,69 @@ pygame.init()
 runtime = 1
 running = True
 
-def gameover():
-    screen.blit(font.render("GAME OVER",True,(255,0,0)),(550,350))
-    addhighscore()    
+def resetvalues():
+    global runtime,ghostlist,waveno,maxghostno,playerdata,running
+    runtime,ghostlist,waveno,maxghostno,playerdata,running = 1,[],0,1,[1200,380,"down",10],True
 
+
+def gameover():
+    global ghostlist,running
+    ghostlist = []
+    screen.blit(font.render("GAME OVER",True,(255,0,0)),(490,150))
+    screen.blit(font.render("Time : "+str(runtime),True,(255,0,0)),(530,280))
+    screen.blit(font.render("Return To Menu",True,(255,0,0)),(452,410))
+    return_rect = pygame.Rect(452,410,830-452,460-100)
+    pygame.display.update()
+    addhighscore()    
+    gameoverloop = True
+    while gameoverloop:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                quit()
+            if return_rect.collidepoint(pygame.mouse.get_pos()):
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    running = False
+                    gameoverloop = False
+
+def escape():
+    global keylist,running,escapeloop
+    screen.blit(font.render("GAME PAUSED!!!!!",True,(255,0,0)),(420,50))
+    screen.blit(font.render("Resume",True,(255,0,0)),(540,150+100))
+    screen.blit(font.render("Settings",True,(255,0,0)),(530,280+100))
+    screen.blit(font.render("End game",True,(255,0,0)),(526,410+100))
+    back_rect = pygame.Rect(1366-240,768-140,217,98)
+    resume_rect = pygame.Rect(540,150+100,720-540,300-250)
+    settings_rect = pygame.Rect(530,280+100,720-530,330-280)
+    return_rect = pygame.Rect(526,410+100,830-452,460-100)
+    back = pygame.image.load(r'menu\back.png')
+    pygame.display.update()
+    addhighscore()    
+    escapeloop = True
+    while escapeloop:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                quit()
+            if resume_rect.collidepoint(pygame.mouse.get_pos()):
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    escapeloop = False
+            if return_rect.collidepoint(pygame.mouse.get_pos()):
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    running = False
+                    escapeloop = False
+            if settings_rect.collidepoint(pygame.mouse.get_pos()):
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    setloop = True
+                    while setloop:
+                        for event2 in pygame.event.get():
+                            screen.blit(map,(0,0))
+                            keylist = settingsdisplay.display(event2,keylist)
+                            screen.blit(back,(1366-240,768-140))
+                            pygame.display.update()
+                            if back_rect.collidepoint(pygame.mouse.get_pos()):
+                                if event.type == pygame.MOUSEBUTTONDOWN:
+                                    setloop = False
+                    escapeloop = False
+    
 
 def addhighscore():    
     fh = open("highscore.dat","rb")
@@ -119,7 +184,12 @@ def addhighscore():
             fh.close()
             break
     data.append([runtime,datetime.now().strftime(r"%d/%m/%Y")])
-    print(data)
+    fh = open("highscore.dat","wb")
+    pos = 1
+    for i in sorted(data)[::-1]:
+        pickle.dump([pos,i[0],i[1]],fh)
+        pos += 1    
+    fh.flush()
 
 def keys(l):
     global keylist
@@ -143,8 +213,15 @@ def timedis():
 
 def ghostdis():
     for i in ghostlist:
-        if steadyno > 50:
-            screen.blit(ghoststeady,(i[0],i[1]))
+        if steadyno > 10:
+            x = random.randint(1,3)
+            if x==1:
+                screen.blit(ghostmove,(i[0],i[1]))
+            elif x==2:
+                screen.blit(ghostmove1,(i[0],i[1]))
+            else:
+                screen.blit(ghostmove2,(i[0],i[1]))
+
         else:
             screen.blit(ghoststeady,(i[0],i[1]))
 
@@ -153,6 +230,8 @@ def swordframe():
     ghostdis()
     pygame.display.update()
     time.sleep(0.04)
+            
+
 
 def mapdis():
     screen.blit(map,(0,0))
@@ -212,8 +291,10 @@ def movement(pressedlist):
     directionlist = []
     xyposreturn = [playerdata[0],playerdata[1]]
 
-
     for i in pressedlist:
+        if pressedlist[0] == "27":
+            escape()
+            pressedlist.remove("27")
         if i in keylist[0:4]:
             directionlist.append(i)
         if i in keylist[4:5]:
@@ -346,8 +427,9 @@ def movement(pressedlist):
         return xyposreturn
     
 def ghost(i):
+    global running
     try:
-        disx = 100 #random.randint(8,11)
+        disx = random.randint(ghostspeed-2,ghostspeed+2)
         disy = random.randint(8,11)
         ran = random.randint(1,3)
 
@@ -357,13 +439,13 @@ def ghost(i):
         if ran == 2 and 694 > ghostlist[i][1] + disy:
             ghostlist[i][1] += disy
 
-        if ghostlist[i][0] < 200:
-            gameover()
+        if ghostlist[i][0] < 250:
+            running = False
 
         if sword_rect.collidepoint(ghostlist[i][0]+10,ghostlist[i][1]+15):
             ghostlist.remove(ghostlist[i])
 
-        time.sleep(0.01)
+        time.sleep(0.08)
     except IndexError:
         pass
 
@@ -371,35 +453,42 @@ def ghost(i):
 def wave():
     global waveno,maxghostno
     waveno += 1
-    maxghostno += random.randint(5,20)#noincrease
+    maxghostno += random.randint(2,6)#noincrease
 
     for i in range(0,maxghostno):
         ghostlist.append([random.randint(1100,1310),random.randint(40,649),2])
 
-    while ghostlist != [] :
-        for i in range(len(ghostlist)):
-            temp = len(ghostlist)
-            ghostthread = threading.Thread(target = ghost(i))
-            ghostthread.start()
-
-            time.sleep(0.02)
-           
+    while ghostlist != []:
+        if escapeloop == False:
+            for i in range(len(ghostlist)):
+                temp = len(ghostlist)
+                ghostthread = threading.Thread(target = ghost(i))
+                ghostthread.start()
+    
+                time.sleep(0.02)
+            
 def timer():
     global runtime
     while running:
-        time.sleep(0.01)
-        runtime = round(runtime + 0.01,2) 
+        if not escapeloop:
+            time.sleep(0.01)
+            runtime = round(runtime + 0.01,2) 
         
 
 def main():
+    resetvalues()
+    global steadyno,sword_rect
     pressedlist = []
     timethread = threading.Thread(target = timer)
     timethread.start()
     while running:
         for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                quit()
             pressedlist = keysheld(pressedlist,event)
         playerdata[0],playerdata[1] = movement(pressedlist)
         screen.blit(map,(0,0))
+        steadyno += 1
         timedis()
         ghostdis()
         if playerdata[2] == "right":
@@ -411,6 +500,7 @@ def main():
         if playerdata[2] == "down":
             screen.blit(downlist[moveno[3]],(playerdata[0],playerdata[1]))
         time.sleep(0.02)
+        sword_rect = sword_rect = pygame.Rect(-100,-100,10,10)
 
         pygame.display.update()
 
@@ -426,3 +516,5 @@ def main():
             
 
         time.sleep(0.04)
+    
+    gameover()

@@ -2,10 +2,8 @@ import pickle
 
 fh = open("highscore.dat","wb")
 
-l=[]
-
-for i in l:
-    pickle.dump(i,fh)
+l=[[0,0,"--/--/--"]]
+pickle.dump(l,fh)
     
 fh = open("highscore.dat","rb")
 data = []
