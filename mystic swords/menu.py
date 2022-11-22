@@ -131,6 +131,8 @@ def menu(keylist):
                 menu_dict["next"] = False     
                 menu_dict["htpmenu"] = False
                 menu_dict["clearscore"] = False
+                menu_dict["create"] = False
+                menu_dict["join"] = False
                 nextno = 0 
 
         if menu_dict["htpmenu"]==True:
@@ -175,7 +177,7 @@ def menu(keylist):
             screen.blit(sword_right,(screen_x/2+115,screen_y/2-42-270))
             pygame.display.update()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                #return ["singleplayer"]                
+                #return ["singleplayer"],keylist          
                 menu_dict["play"]=False
                 menu_dict["singleplayer"]=True
                 menu_dict["multiplayer"]=True

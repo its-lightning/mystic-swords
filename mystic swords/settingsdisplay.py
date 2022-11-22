@@ -18,6 +18,8 @@ def display(event,keylist):
     screen.blit(tile,(240,240))
     screen.blit(tile,(360,240))
     screen.blit(tile,(550,240))
+        
+    screen.blit(font.render("Change Controls",True,(255,0,0)),(10,10))
     
     
 

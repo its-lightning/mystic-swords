@@ -5,7 +5,6 @@ import threading
 import random
 import pickle
 import settingsdisplay
-import menu
 
 screen = pygame.display.set_mode((1366,768))
 
@@ -145,7 +144,6 @@ def escape():
     return_rect = pygame.Rect(526,410+100,830-452,460-100)
     back = pygame.image.load(r'menu\back.png')
     pygame.display.update()
-    addhighscore()    
     escapeloop = True
     while escapeloop:
         for event in pygame.event.get():
