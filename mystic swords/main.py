@@ -8,11 +8,11 @@ import singleplayergame
 
 
 pygame.display.set_caption("Mystic Sword")
+icon = pygame.image.load("player/sright 2.png")
+pygame.display.set_icon(icon)
 
 
 screen = pygame.display.set_mode((1366,768))
-
-stable = pygame.image.load('player\stable 1.png')
 
 #right left up down space \/
 keylist=["100","97","119","115","32"]
